@@ -12,9 +12,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-function utama($view) {
-    return view("utama.$view");
+if (! function_exists('utama'))
+{
+    function utama($view) {
+        return view("utama.$view");
+    }
 }
 
 Route::get('/', function () {
@@ -35,4 +37,16 @@ Route::get('/prasmanan', function () {
 
 Route::get('/nasikotak', function () {
     return utama('nasikotak.index');
+});
+
+
+if (! function_exists('utama'))
+{
+    function admin($view) {
+        return view("admin.$view");
+    }
+}
+
+Route::get('/login', function () {
+    return admin('login');
 });
