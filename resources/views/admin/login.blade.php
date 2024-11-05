@@ -19,7 +19,7 @@
         }
 
         .bg-image {
-            background-image: url('images/bg.png');
+            background-image: url('/images/kontak.png');
             height: 100%;
             background-size: cover;
             background-position: center;
@@ -126,7 +126,7 @@
 
     <div class="card-container d-flex align-items-center justify-content-center">
         <div class="card p-4 shadow">
-            <img src="images/logo.png" alt="Logo" style="width: 200px; height: auto; display: block; margin: auto;"><br>
+            <img src="images/logonova.png" alt="Logo" style="width: 200px; height: auto; display: block; margin: auto;"><br>
             <h2 class="mb-4 text-left small">LOGIN ADMIN</h2>
             <form id="loginForm">
                 <div class="form-group">
@@ -180,11 +180,11 @@
                     if (user) {
                         // Store the username in localStorage
                         localStorage.setItem('username', username);
-                        
+
                         showSweetAlert("success", "Login Berhasil", "Login berhasil!");
                         setTimeout(function() {
                             // Redirect to admin_dashboard.html or any other page
-                            window.location.href = `admin_dashboard.html?username=${encodeURIComponent(username)}`;                         
+                            window.location.href = `admin_dashboard.html?username=${encodeURIComponent(username)}`;
                         }, 1500);
                     } else {
                         showSweetAlert("error", "Login Gagal", "Username atau password salah.");
