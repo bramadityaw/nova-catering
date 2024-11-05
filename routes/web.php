@@ -40,7 +40,7 @@ Route::get('/nasikotak', function () {
 });
 
 
-if (! function_exists('utama'))
+if (! function_exists('admin'))
 {
     function admin($view) {
         return view("admin.$view");
