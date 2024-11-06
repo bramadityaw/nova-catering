@@ -29,5 +29,6 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('web')->group(function () {
 
     Route::get('/reviews', [ReviewController::class, 'all'])->name('review.all');
+    Route::get('/review/{review}', [ReviewController::class, 'show'])->name('review.show');
 
 });

@@ -18,6 +18,15 @@ class ReviewController extends Controller
         return response()->json($reviews);
     }
 
+    public function show(Review $review) : JsonResponse
+    {
+        return response()->json([
+            'id' => $review->id,
+            'content' => $review->content,
+            'reviewer_name' => $review->reviewer_name,
+        ]);
+    }
+
     public function store(Request $request) : JsonResponse
     {
         $validated = $request->validate([
