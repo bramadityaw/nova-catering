@@ -50,16 +50,15 @@ class PartnerController extends Controller
         }
 
         $ext = $file->extension();
-        $path = $file->storeAs('partners', "$nama.$ext", 'public');
+        $path = asset('/storage/' . $file->storeAs('partners', "$nama.$ext", 'public'));
 
         $partner = new Partner();
         $partner->nama = $nama;
-        $partner->logo = asset('/storage/' . $path);
+        $partner->logo = $path;
 
         if (! $partner->save()) {
             return response()->json([
                 'message' => "Partner $nama gagal tersimpan.",
-                'logo_path' => $path,
             ], 500);
         }
 
