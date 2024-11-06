@@ -83,6 +83,48 @@ class PartnerController extends Controller
         ]);
     }
 
+    public function update(Request $request, Partner $partner) : JsonResponse
+    {
+        $valid = $request->validate([
+            'logo' => [
+                'nullable',
+                'mimes:jpg,jpeg,png',
+                'extensions:jpg,jpeg,png'
+            ],
+            'nama' => [
+                'nullable',
+            ],
+        ]);
+
+        $nama = $partner->nama;
+
+        if (! empty($valid['nama'])) {
+            $nama = $valid['nama'];
+            $partner->nama = $nama;
+        }
+
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+
+            if (! $file->isValid()) {
+                return response()->json([
+                    'message' => 'File gagal terupload.'
+                ], 400);
+            }
+
+            $ext = $file->extension();
+            $path = $file->storeAs('partners', "$nama.$ext", 'public');
+
+            $partner->logo = $path;
+        }
+
+        $partner->save();
+
+        return response()->json([
+            'message' => "Partner $partner->nama berhasil diubah",
+        ]);
+    }
+
     public function destroy(Partner $partner) : JsonResponse
     {
         $nama = $partner->nama;
