@@ -6,25 +6,41 @@ use App\Models\Partner;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PartnerController extends Controller
 {
+    private function asset_storage(string $path) : string
+    {
+        return asset(Storage::url($path));
+    }
+
     public function all() : JsonResponse
     {
         $partners = DB::table('partners')
             ->select('nama', 'logo')
-            ->get();
+            ->get()
+            ->map(function ($partner) {
+                $partner->logo = $this->asset_storage($partner->logo);
+                return $partner;
+            });
 
         return response()->json($partners);
     }
 
     public function index() : JsonResponse
     {
-        return response()->json(Partner::all());
+        $partners = Partner::all()
+            ->map(function (Partner $partner) {
+                $partner->logo = $this->asset_storage($partner->logo);
+            });
+
+        return response()->json($partners);
     }
 
     public function show(Partner $partner) : JsonResponse
     {
+        $partner->logo = $this->asset_storage($partner->logo);
         return response()->json($partner);
     }
 
@@ -50,7 +66,7 @@ class PartnerController extends Controller
         }
 
         $ext = $file->extension();
-        $path = asset('/storage/' . $file->storeAs('partners', "$nama.$ext", 'public'));
+        $path = $file->storeAs('partners', "$nama.$ext", 'public');
 
         $partner = new Partner();
         $partner->nama = $nama;
@@ -65,11 +81,6 @@ class PartnerController extends Controller
         return response()->json([
             'message' => "Partner $nama tersimpan.",
         ]);
-    }
-
-    public function update(Request $request,Partner $partner) : JsonResponse
-    {
-        return response()->json();
     }
 
     public function destroy(Partner $partner) : JsonResponse
