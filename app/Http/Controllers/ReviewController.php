@@ -27,6 +27,36 @@ class ReviewController extends Controller
         ]);
     }
 
+    public function conceal(Review $review) : JsonResponse
+    {
+        if (!$review->public) {
+            return response()->json([
+                'message' => "{$review->reviewer_name}'s review set is already hidden",
+            ]);
+        }
+        $review->public = false;
+        $review->save();
+
+        return response()->json([
+            'message' => "{$review->reviewer_name}'s review set to hidden succesfully",
+        ]);
+    }
+
+    public function reveal(Review $review) : JsonResponse
+    {
+        if ($review->public) {
+            return response()->json([
+                'message' => "{$review->reviewer_name}'s review set is already public",
+            ]);
+        }
+        $review->public = true;
+        $review->save();
+
+        return response()->json([
+            'message' => "{$review->reviewer_name}'s review set to public succesfully",
+        ]);
+    }
+
     public function store(Request $request) : JsonResponse
     {
         $validated = $request->validate([

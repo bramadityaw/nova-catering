@@ -23,6 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
+    Route::post('/review/{review}/conceal', [ReviewController::class, 'conceal'])->name('review.conceal');
+    Route::post('/review/{review}/reveal', [ReviewController::class, 'reveal'])->name('review.reveal');
 
 });
 
