@@ -84,4 +84,19 @@ class ReviewController extends Controller
             'message' => "Ulasan milik {$validated['reviewer_name']} berhasil disimpan"
         ]);
     }
+
+
+    public function destroy(Review $review) : JsonResponse
+    {
+        if (!$review->delete())
+        {
+            return response()->json([
+                'message' => "Ulasan milik {$review->reviewer_name} berhasil dihapus"
+            ], 500);
+        };
+
+        return response()->json([
+            'message' => "Ulasan milik {$review->reviewer_name} berhasil dihapus"
+        ]);
+    }
 }

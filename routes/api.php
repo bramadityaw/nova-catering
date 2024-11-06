@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
     Route::post('/review/{review}/hide', [ReviewController::class, 'conceal'])->name('review.conceal');
     Route::post('/review/{review}/show', [ReviewController::class, 'reveal'])->name('review.reveal');
+    Route::delete('/review/{review}', [ReviewController::class, 'destroy'])->name('review.destroy');
 
 });
 
