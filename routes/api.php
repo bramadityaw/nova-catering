@@ -16,18 +16,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::post('/review', [ReviewController::class, 'store']);
+    Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
 
 });
 
 Route::middleware('web')->group(function () {
 
-    Route::get('/reviews', [ReviewController::class, 'all']);
+    Route::get('/reviews', [ReviewController::class, 'all'])->name('review.all');
 
 });
