@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,11 +29,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/review/{review}/show', [ReviewController::class, 'reveal'])->name('review.reveal');
     Route::delete('/review/{review}', [ReviewController::class, 'destroy'])->name('review.destroy');
 
+    Route::get('/partners/index', [PartnerController::class, 'index'])->name('partner.index');
+    Route::post('/partner', [PartnerController::class, 'store'])->name('partner.store');
+    Route::delete('/partner/{partner}', [PartnerController::class, 'destroy'])->name('partner.destroy');
+    Route::put('/partner/{partner}', [PartnerController::class, 'update'])->name('partner.update');
 });
 
 Route::middleware('web')->group(function () {
 
     Route::get('/reviews', [ReviewController::class, 'all'])->name('review.all');
     Route::get('/review/{review}', [ReviewController::class, 'show'])->name('review.show');
+
+    Route::get('/partners', [PartnerController::class, 'all'])->name('partner.all');
+    Route::get('/partner/{partner}', [PartnerController::class, 'show'])->name('partner.show');
 
 });
