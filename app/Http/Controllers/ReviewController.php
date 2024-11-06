@@ -38,7 +38,7 @@ class ReviewController extends Controller
         if (!$review->public) {
             return response()->json([
                 'message' => "{$review->reviewer_name}'s review set is already hidden",
-            ]);
+            ], 400);
         }
         $review->public = false;
         $review->save();
@@ -53,7 +53,7 @@ class ReviewController extends Controller
         if ($review->public) {
             return response()->json([
                 'message' => "{$review->reviewer_name}'s review set is already public",
-            ]);
+            ], 400);
         }
         $review->public = true;
         $review->save();
