@@ -18,6 +18,12 @@ class ReviewController extends Controller
         return response()->json($reviews);
     }
 
+
+    public function index() : JsonResponse
+    {
+        return response()->json(Review::all());
+    }
+
     public function show(Review $review) : JsonResponse
     {
         return response()->json([

@@ -22,9 +22,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    Route::get('/reviews/index', [ReviewController::class, 'index'])->name('review.index');
     Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
-    Route::post('/review/{review}/conceal', [ReviewController::class, 'conceal'])->name('review.conceal');
-    Route::post('/review/{review}/reveal', [ReviewController::class, 'reveal'])->name('review.reveal');
+    Route::post('/review/{review}/hide', [ReviewController::class, 'conceal'])->name('review.conceal');
+    Route::post('/review/{review}/show', [ReviewController::class, 'reveal'])->name('review.reveal');
 
 });
 
