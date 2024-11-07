@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class MenuItem extends Model
+class Menu extends Model
 {
     use HasFactory;
 
@@ -17,10 +17,12 @@ class MenuItem extends Model
      */
     protected $fillable = [
         'nama',
+        'harga',
+        'kategori',
     ];
 
-    public function menus() : BelongsToMany
+    public function items() : BelongsToMany
     {
-        return $this->belongsToMany(Menu::class);
+        return $this->belongsToMany(MenuItem::class);
     }
 }
