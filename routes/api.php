@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ReviewController;
@@ -39,6 +40,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/menu-item', [MenuItemController::class, 'store'])->name('menu-item.store');
     Route::delete('/menu-item/{item}', [MenuItemController::class, 'destroy'])->name('menu-item.destroy');
     Route::put('/menu-item/{item}', [MenuItemController::class, 'update'])->name('menu-item.update');
+
+    Route::get('/menus/index', [MenuItemController::class, 'index'])->name('menu.index');
+    Route::post('/menu', [MenuController::class, 'store'])->name('menu.store');
 });
 
 Route::middleware('web')->group(function () {
@@ -51,4 +55,6 @@ Route::middleware('web')->group(function () {
 
     Route::get('/menu-items', [MenuItemController::class, 'all'])->name('menu-item.all');
     Route::get('/menu-item/{item}', [MenuItemController::class, 'show'])->name('menu-item.show');
+
+    Route::get('/menus', [MenuController::class, 'all'])->name('menu.all');
 });
