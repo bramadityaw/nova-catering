@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
@@ -33,6 +34,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/partner', [PartnerController::class, 'store'])->name('partner.store');
     Route::delete('/partner/{partner}', [PartnerController::class, 'destroy'])->name('partner.destroy');
     Route::put('/partner/{partner}', [PartnerController::class, 'update'])->name('partner.update');
+
+    Route::get('/menu-items/index', [MenuItemController::class, 'index'])->name('menu-item.index');
+    Route::post('/menu-item', [MenuItemController::class, 'store'])->name('menu-item.store');
+    Route::delete('/menu-item/{item}', [MenuItemController::class, 'destroy'])->name('menu-item.destroy');
+    Route::put('/menu-item/{item}', [MenuItemController::class, 'update'])->name('menu-item.update');
 });
 
 Route::middleware('web')->group(function () {
@@ -43,4 +49,6 @@ Route::middleware('web')->group(function () {
     Route::get('/partners', [PartnerController::class, 'all'])->name('partner.all');
     Route::get('/partner/{partner}', [PartnerController::class, 'show'])->name('partner.show');
 
+    Route::get('/menu-items', [MenuItemController::class, 'all'])->name('menu-item.all');
+    Route::get('/menu-item/{item}', [MenuItemController::class, 'show'])->name('menu-item.show');
 });
