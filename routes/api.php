@@ -57,4 +57,5 @@ Route::middleware('web')->group(function () {
     Route::get('/satuan/{satuan}', [SatuanController::class, 'show'])->name('satuan.show');
 
     Route::get('/pakets', [PaketController::class, 'all'])->name('paket.all');
+    Route::get('/paket/{paket}', [PaketController::class, 'show'])->name('paket.show');
 });

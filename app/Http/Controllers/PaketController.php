@@ -25,6 +25,11 @@ class PaketController extends Controller
         return response()->json(Paket::all());
     }
 
+    public function show(Paket $paket) : JsonResponse
+    {
+        return response()->json($paket);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $valid = $request->validate([
