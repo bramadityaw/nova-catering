@@ -13,11 +13,11 @@ class PaketController extends Controller
 {
     public function all(): JsonResponse
     {
-        $menus = DB::table('menus')
+        $pakets = DB::table('paket')
             ->select('id', 'nama', 'harga', 'kategori')
             ->get();
 
-        return response()->json($menus);
+        return response()->json($pakets);
     }
 
     public function index(): JsonResponse
@@ -34,19 +34,19 @@ class PaketController extends Controller
             'items' => ['nullable', 'array' , 'exists:satuan,id'],
         ]);
 
-        $menu = new Paket();
-        $menu->nama = $valid['nama'];
-        $menu->harga = $valid['harga'];
-        $menu->kategori = $valid['kategori'];
+        $paket = new Paket();
+        $paket->nama = $valid['nama'];
+        $paket->harga = $valid['harga'];
+        $paket->kategori = $valid['kategori'];
 
-        if (! $menu->save()) {
+        if (! $paket->save()) {
             return response()->json([
-                'message' => "Menu {$valid['nama']} gagal tersimpan",
+                'message' => "paket {$valid['nama']} gagal tersimpan",
             ], 500);
         }
 
         return response()->json([
-            'message' => "Menu $menu->nama berhasil disimpan",
+            'message' => "paket $paket->nama berhasil disimpan",
         ]);
     }
 }
