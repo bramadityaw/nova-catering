@@ -58,4 +58,5 @@ Route::middleware('web')->group(function () {
 
     Route::get('/pakets', [PaketController::class, 'all'])->name('paket.all');
     Route::get('/paket/{paket}', [PaketController::class, 'show'])->name('paket.show');
+    Route::get('/paket/{paket}', [PaketController::class, 'show'])->name('paket.show');
 });

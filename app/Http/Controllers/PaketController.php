@@ -30,6 +30,12 @@ class PaketController extends Controller
         return response()->json($paket);
     }
 
+    public function items(Paket $paket) : JsonResponse
+    {
+        $items = $paket->items()->get();
+        return response()->json($items);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $valid = $request->validate([
