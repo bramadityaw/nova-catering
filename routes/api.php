@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MenuController;
-use App\Http\Controllers\MenuItemController;
+use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SatuanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,13 +36,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/partner/{partner}', [PartnerController::class, 'destroy'])->name('partner.destroy');
     Route::put('/partner/{partner}', [PartnerController::class, 'update'])->name('partner.update');
 
-    Route::get('/menu-items/index', [MenuItemController::class, 'index'])->name('menu-item.index');
-    Route::post('/menu-item', [MenuItemController::class, 'store'])->name('menu-item.store');
-    Route::delete('/menu-item/{item}', [MenuItemController::class, 'destroy'])->name('menu-item.destroy');
-    Route::put('/menu-item/{item}', [MenuItemController::class, 'update'])->name('menu-item.update');
+    Route::get('/satuans/index', [SatuanController::class, 'index'])->name('satuan.index');
+    Route::post('/satuan', [SatuanController::class, 'store'])->name('satuan.store');
+    Route::delete('/satuan/{satuan}', [SatuanController::class, 'destroy'])->name('satuan.destroy');
+    Route::put('/satuan/{satuan}', [SatuanController::class, 'update'])->name('satuan.update');
 
-    Route::get('/menus/index', [MenuItemController::class, 'index'])->name('menu.index');
-    Route::post('/menu', [MenuController::class, 'store'])->name('menu.store');
+    Route::get('/pakets/index', [PaketController::class, 'index'])->name('paket.index');
+    Route::post('/paket', [PaketController::class, 'store'])->name('paket.store');
 });
 
 Route::middleware('web')->group(function () {
@@ -53,8 +53,8 @@ Route::middleware('web')->group(function () {
     Route::get('/partners', [PartnerController::class, 'all'])->name('partner.all');
     Route::get('/partner/{partner}', [PartnerController::class, 'show'])->name('partner.show');
 
-    Route::get('/menu-items', [MenuItemController::class, 'all'])->name('menu-item.all');
-    Route::get('/menu-item/{item}', [MenuItemController::class, 'show'])->name('menu-item.show');
+    Route::get('/satuans', [SatuanController::class, 'all'])->name('satuan.all');
+    Route::get('/satuan/{satuan}', [SatuanController::class, 'show'])->name('satuan.show');
 
-    Route::get('/menus', [MenuController::class, 'all'])->name('menu.all');
+    Route::get('/pakets', [PaketController::class, 'all'])->name('paket.all');
 });

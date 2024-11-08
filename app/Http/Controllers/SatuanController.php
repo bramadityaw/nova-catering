@@ -2,39 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MenuItem;
+use App\Models\Satuan;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class MenuItemController extends Controller
+class SatuanController extends Controller
 {
     public function all() : JsonResponse
     {
-        $items = DB::table('menu_items', 'item')
+        $satuans = DB::table('satuan')
             ->select('id', 'nama')
             ->get();
-        return response()->json($items);
+        return response()->json($satuans);
     }
 
     public function index() : JsonResponse
     {
-        $items = MenuItem::all();
-        return response()->json($items);
+        $satuans = Satuan::all();
+        return response()->json($satuans);
     }
 
-    public function show(MenuItem $item) : JsonResponse
+    public function show(Satuan $satuan) : JsonResponse
     {
-        return response()->json($item);
+        return response()->json($satuan);
     }
 
     public function store(Request $request) : JsonResponse
     {
-        $item = MenuItem::create([
+        $satuan = Satuan::create([
             'nama' => $request->nama,
         ]);
 
-        if (! $item) {
+        if (! $satuan) {
             return response()->json([
                 'message' => "Gagal menyimpan $request->nama",
             ], 500);
@@ -45,33 +45,33 @@ class MenuItemController extends Controller
         ]);
     }
 
-    public function update(Request $request, MenuItem $item) : JsonResponse
+    public function update(Request $request, Satuan $satuan) : JsonResponse
     {
-        $old = $item->nama;
+        $old = $satuan->nama;
 
-        $item->nama = $request->nama;
+        $satuan->nama = $request->nama;
 
-        if (! $item->save()) {
+        if (! $satuan->save()) {
             return response()->json([
                 'message' => "Gagal mengubah $old",
             ], 500);
         }
 
         return response()->json([
-            'message' => "Berhasil mengubah '$old' menjadi '$item->nama'",
+            'message' => "Berhasil mengubah '$old' menjadi '$satuan->nama'",
         ]);
     }
 
-    public function destroy(MenuItem $item) : JsonResponse
+    public function destroy(Satuan $satuan) : JsonResponse
     {
-        if (! $item->delete()) {
+        if (! $satuan->delete()) {
             return response()->json([
-                'message' => "Gagal menghapus $item->nama",
+                'message' => "Gagal menghapus $satuan->nama",
             ], 500);
         }
 
         return response()->json([
-            'message' => "Berhasil menghapus $item->nama",
+            'message' => "Berhasil menghapus $satuan->nama",
         ]);
     }
 }

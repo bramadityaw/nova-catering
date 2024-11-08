@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class MenuItem extends Model
+class Satuan extends Model
 {
     use HasFactory;
 
@@ -19,8 +19,15 @@ class MenuItem extends Model
         'nama',
     ];
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'satuan';
+
     public function menus() : BelongsToMany
     {
-        return $this->belongsToMany(Menu::class);
+        return $this->belongsToMany(Paket::class);
     }
 }
