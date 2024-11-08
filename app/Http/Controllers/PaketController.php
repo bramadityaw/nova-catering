@@ -41,12 +41,18 @@ class PaketController extends Controller
 
         if (! $paket->save()) {
             return response()->json([
-                'message' => "paket {$valid['nama']} gagal tersimpan",
+                'message' => "Paket {$valid['nama']} gagal tersimpan",
             ], 500);
         }
 
+        $items = $valid['items'];
+
+        if (! empty($items)) {
+            $paket->items()->attach($items);
+        }
+
         return response()->json([
-            'message' => "paket $paket->nama berhasil disimpan",
+            'message' => "Paket $paket->nama berhasil disimpan",
         ]);
     }
 }
