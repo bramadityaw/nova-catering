@@ -43,6 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/pakets/index', [PaketController::class, 'index'])->name('paket.index');
     Route::post('/paket', [PaketController::class, 'store'])->name('paket.store');
+    Route::put('/paket/{paket}', [PaketController::class, 'update'])->name('paket.update');
+    Route::delete('/paket/{paket}', [PaketController::class, 'update'])->name('paket.update');
 });
 
 Route::middleware('web')->group(function () {
@@ -58,5 +60,5 @@ Route::middleware('web')->group(function () {
 
     Route::get('/pakets', [PaketController::class, 'all'])->name('paket.all');
     Route::get('/paket/{paket}', [PaketController::class, 'show'])->name('paket.show');
-    Route::get('/paket/{paket}', [PaketController::class, 'show'])->name('paket.show');
+    Route::get('/paket/{paket}/items', [PaketController::class, 'items'])->name('paket.items');
 });

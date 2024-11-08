@@ -59,11 +59,42 @@ class PaketController extends Controller
         $items = $valid['items'];
 
         if (! empty($items)) {
-            $paket->items()->attach($items);
+            $paket->items()->sync($items, false);
         }
 
         return response()->json([
             'message' => "Paket $paket->nama berhasil disimpan",
         ]);
     }
+
+    public function update(Request $request, Paket $paket): JsonResponse
+    {
+        $valid = $request->validate([
+            'nama' => [],
+            'harga' => ['integer'],
+            'kategori' => [Rule::enum(KategoriPaket::class)],
+            'items' => ['nullable', 'array' , 'exists:satuan,id'],
+        ]);
+
+        $paket->nama = $valid['nama'];
+        $paket->harga = $valid['harga'];
+        $paket->kategori = $valid['kategori'];
+
+        if (! $paket->save()) {
+            return response()->json([
+                'message' => "Paket {$valid['nama']} gagal diubah",
+            ], 500);
+        }
+
+        $items = $valid['items'];
+
+        if (! empty($items)) {
+            $paket->items()->sync($items, false);
+        }
+
+        return response()->json([
+            'message' => "Paket $paket->nama berhasil diubah",
+        ]);
+    }
+
 }
