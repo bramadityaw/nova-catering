@@ -70,17 +70,18 @@ class PaketController extends Controller
     public function update(Request $request, Paket $paket): JsonResponse
     {
         $valid = $request->validate([
-            'nama' => [],
-            'harga' => ['integer'],
-            'kategori' => [Rule::enum(KategoriPaket::class)],
+            'nama' => ['nullable'],
+            'harga' => ['nullable', 'integer'],
+            'kategori' => ['nullable', Rule::enum(KategoriPaket::class)],
             'items' => ['nullable', 'array' , 'exists:satuan,id'],
         ]);
 
-        $paket->nama = $valid['nama'];
-        $paket->harga = $valid['harga'];
-        $paket->kategori = $valid['kategori'];
+        $paket->nama = ! empty($valid['nama']) ? $paket->nama  : $valid['nama'];
+        $paket->harga = ! empty($valid['harga']) ? $paket->harga  : $valid['harga'];
+        $paket->kategori = ! empty($valid['kategori']) ? $paket->kategori  : $valid['kategori'];
 
-        if (! $paket->save()) {
+        // Only persist the model if it is modified
+        if ($paket->isDirty() && ! $paket->save()) {
             return response()->json([
                 'message' => "Paket {$valid['nama']} gagal diubah",
             ], 500);
