@@ -26,7 +26,7 @@ class Satuan extends Model
      */
     protected $table = 'satuan';
 
-    public function menus() : BelongsToMany
+    public function paket() : BelongsToMany
     {
         return $this->belongsToMany(Paket::class);
     }
