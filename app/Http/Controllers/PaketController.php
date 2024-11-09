@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\KategoriPaket;
 use App\Models\Paket;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -43,12 +44,30 @@ class PaketController extends Controller
             'harga' => ['integer'],
             'kategori' => [Rule::enum(KategoriPaket::class)],
             'items' => ['nullable', 'array' , 'exists:satuan,id'],
+            'foto' => [
+                'required',
+                'mimes:jpg,jpeg,png',
+                'extensions:jpg,jpeg,png'
+            ],
         ]);
 
         $paket = new Paket();
         $paket->nama = $valid['nama'];
         $paket->harga = $valid['harga'];
         $paket->kategori = $valid['kategori'];
+
+        $file = $request->file('foto');
+        if (! $file->isValid()) {
+            return response()->json([
+                'message' => 'File gagal terupload.'
+            ], 400);
+        }
+
+        $nama_file = Str::kebab($valid['nama']);
+        $ext = $file->extension();
+        $path = $file->storeAs('partners', "$nama_file.$ext", 'public');
+
+        $paket->foto = $path;
 
         if (! $paket->save()) {
             return response()->json([
