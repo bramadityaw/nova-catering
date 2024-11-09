@@ -40,9 +40,9 @@ class PaketController extends Controller
     public function store(Request $request): JsonResponse
     {
         $valid = $request->validate([
-            'nama' => [],
-            'harga' => ['integer'],
-            'kategori' => [Rule::enum(KategoriPaket::class)],
+            'nama' => ['required'],
+            'harga' => ['required', 'integer'],
+            'kategori' => ['required', Rule::enum(KategoriPaket::class)],
             'items' => ['nullable', 'array' , 'exists:satuan,id'],
             'foto' => [
                 'required',
