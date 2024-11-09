@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\KategoriPaket;
 use App\Models\Paket;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\JsonResponse;
@@ -12,22 +13,38 @@ use Illuminate\Http\Request;
 
 class PaketController extends Controller
 {
+    private function asset_storage(string $path) : string
+    {
+        return asset(Storage::url($path));
+    }
+
     public function all(): JsonResponse
     {
         $pakets = DB::table('paket')
             ->select('id', 'nama', 'harga', 'kategori')
-            ->get();
+            ->get()
+            ->map(function ($paket) {
+                $paket->foto = $this->asset_storage($paket->foto);
+                return $paket;
+            });
 
         return response()->json($pakets);
     }
 
     public function index(): JsonResponse
     {
-        return response()->json(Paket::all());
+        $pakets = Paket::all()
+            ->map(function ($paket) {
+                $paket->foto = $this->asset_storage($paket->foto);
+                return $paket;
+            });
+
+        return response()->json($pakets);
     }
 
     public function show(Paket $paket) : JsonResponse
     {
+        $paket->foto = $this->asset_storage($paket->foto);
         return response()->json($paket);
     }
 
