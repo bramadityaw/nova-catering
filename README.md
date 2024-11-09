@@ -1,66 +1,322 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Dokumentasi Projek Website Nova Catering
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+- [TBD](#tbd)
+- [General](#general)
+   * [Administrasi Pengguna](#administrasi-pengguna)
+      + [Registrasi Admin](#registrasi-admin)
+      + [Penghapusan Admin](#penghapusan-admin)
+- [REST API](#rest-api)
+   * [Autentikasi](#autentikasi)
+      + [Log In](#log-in)
+      + [Log Out](#log-out)
+   * [Partner](#partner)
+      + [Mengambil partner tertentu](#mengambil-partner-tertentu)
+      + [Mengambil semua partner](#mengambil-semua-partner)
+      + [Mengambil semua partner dengan metadata](#mengambil-semua-partner-dengan-metadata)
+      + [Mendaftarkan Partner Baru](#mendaftarkan-partner-baru)
+      + [Mengubah Partner](#mengubah-partner)
+      + [Menghapus Partner Tertentu](#menghapus-partner-tertentu)
+   * [Review](#review)
+      + [Mengambil semua review publik](#mengambil-semua-review-publik)
+      + [Mengambil semua review, termasuk yang disembunyikan, dengan metadata](#mengambil-semua-review-termasuk-yang-disembunyikan-dengan-metadata)
+      + [Mengambil review tertentu](#mengambil-review-tertentu)
+      + [Menyembunyikan review](#menyembunyikan-review)
+      + [Menampilkan review](#menampilkan-review)
+      + [Membuat Review Baru](#membuat-review-baru)
+      + [Menghapus review](#menghapus-review)
+   * [Menu Satuan](#menu-satuan)
+      + [Mengambil semua menu satuan](#mengambil-semua-menu-satuan)
+      + [Mengambil semua menu satuan dengan metadata](#mengambil-semua-menu-satuan-dengan-metadata)
+      + [Mengambil menu satuan tertentu](#mengambil-menu-satuan-tertentu)
+      + [Membuat menu satuan baru](#membuat-menu-satuan-baru)
+      + [Memperbaru menu satuan tertentu](#memperbaru-menu-satuan-tertentu)
+      + [Menghapus menu satuan tertentu](#menghapus-menu-satuan-tertentu)
+   * [Menu Paket](#menu-paket)
+      + [Mengambil semua data menu paket](#mengambil-semua-data-menu-paket)
+      + [Mengambil semua data menu paket dengan metadata](#mengambil-semua-data-menu-paket-dengan-metadata)
+      + [Mengambil data menu paket tertentu](#mengambil-data-menu-paket-tertentu)
+      + [Mengambil semua menu satuan untuk menu paket tertentu](#mengambil-semua-menu-satuan-untuk-menu-paket-tertentu)
+      + [Membuat menu paket baru](#membuat-menu-paket-baru)
+      + [Memperbaru menu paket tertentu](#memperbaru-menu-paket-tertentu)
+      + [Menghapus menu paket tertentu](#menghapus-menu-paket-tertentu)
 
-## About Laravel
+# TBD
+- Captcha in review form
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# General
+## Administrasi Pengguna
+Pendaftaran dan penghapusan akun admin tidak tersedia melalui antarmuka web. Kedua aksi tersebut dilakukan melalui perintah Artisan custom berikut.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Registrasi Admin
+```bash
+php artisan admin:new <name> <password>
+```
+### Penghapusan Admin
+```bash
+php artisan admin:delete <name>
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# REST API
+Sebelum membaca lebih jauh, ada beberapa konvensi yang REST API ini patuhi.
+Developer yang menggunakan REST API ini diharapkan mampu memahami konvensi tersebut
+dan menggunakannya sesuai dengan konvensi yang telah ditetapkan.
 
-## Learning Laravel
+REST API ini menggunakan JSON sebagai format pertukaran data, kecuali di beberapa
+endpoint yang menerima file seperti di [`/api/partner/`](#partners) dan [`/api/paket/`](#paket)
+untuk method POST dan PUT. Request untuk endpoint tersebut harus memiliki body dengan
+MIME type multipart/form-data.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Karena API ini menggunakan Laravel, semua request PUT adalah request POST dengan field tambahan _method
+yang memiliki nilai 'PUT.'
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```json
+{
+    ...other data
+    "_method" : "PUT"
+}
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Semua endpoint dengan HTTP method POST, PUT, dan DELETE adalah endpoint yang terlindungi.
 
-## Laravel Sponsors
+Ada dua endpoint index, `/api/{resource}/` dan `/api/{resource}/index`.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+`/api/{resource}/index` adalah endpoint yang dilindungi dan memerlukan [autentikasi](#autentikasi). Endpoint tersebut ditujukan untuk digunakan di dashboard. 
 
-### Premium Partners
+Sementara itu, `/api/{resource}/`  ditujukan untuk digunakan secara publik, dengan beberapa fitur data disembunyikan untuk menghemat waktu query.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Autentikasi
+Request yang mengakses endpoint yang terlindungi perlu menambahkan header Authentication dengan
+nilai `{tipe_token} {token}`. Keduanya dapat diakses melalui [endpoint log in](#log-in).
 
-## Contributing
+### Log In
+```bash
+POST      /api/login
+```
+REST API ini menggunakan Bearer token untuk autentikasi. Token dapat diakses dengan melakukan request dengan username dan password admin yang telah didaftarkan sebelumnya melalui [command prompt](#administrasi-pengguna).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Contoh request:
+```json
+{
+    "name" : "string",
+    "password" : "string"
+}
+```
 
-## Code of Conduct
+Contoh response:
+```json
+{
+    "message": "Login success",
+    "access_token": "TOKEN",
+    "token_type": "Bearer"
+}
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Log Out
+```bash
+POST      /api/logout
+```
+Endpoint ini terlindungi. Request ke endpoint ini tidak memerlukan body.
+Endpoint ini membuat semua token dari user menjadi tidak valid.
 
-## Security Vulnerabilities
+## Partner
+Secara umum, respons untuk method GET kelompok endpoint ini kurang lebih seperti berikut.
+```json
+{
+    "nama" : "Partner",
+    "logo" : "path/to/logo"
+}
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Mengambil partner tertentu
+```bash
+GET       /api/partner/{id}
+```
+### Mengambil semua partner
+```bash
+GET       /api/partners
+```
+### Mengambil semua partner dengan metadata
+```bash
+GET       /api/partners/index
+```
+Endpoint ini terlindungi.
 
-## License
+### Mendaftarkan Partner Baru
+```bash
+POST      /api/partner
+```
+```yaml
+Fields:
+    name: required, string
+    logo: required, file, image
+```
+Endpoint ini terlindungi.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Mengubah Partner
+```bash
+PUT       /api/partner/{id}
+```
+```yaml
+Fields:
+    name: optional, string
+    logo: optional, file, image
+```
+Endpoint ini terlindungi.
+
+### Menghapus Partner Tertentu
+```bash
+DELETE    /api/partner/{id}
+```
+Endpoint ini terlindungi. Request ke endpoint ini tidak memerlukan body.
+
+
+## Review
+Secara umum, respons untuk method GET kelompok endpoint ini kurang lebih seperti berikut.
+```json
+{
+    "id" : 0,
+    "reviewer_name" : "Fulan",
+    "content" : "Lorem ipsum dolor sit amet..."
+}
+```
+Untuk mengontrol visibilitas review, dapat menggunakan endpoint (`/api/review/{id}/show`)[#menyembunyikan-review] dan (`/api/review/{id}/show`)[#menampilkan-review]
+
+### Mengambil semua review publik
+```bash
+GET       /api/reviews
+```
+### Mengambil semua review, termasuk yang disembunyikan, dengan metadata
+```bash
+GET       /api/reviews/index
+```
+Endpoint ini terlindungi.
+
+### Mengambil review tertentu
+```bash
+GET       /api/review/{id}
+```
+### Menyembunyikan review
+```bash
+POST      /api/review/{id}/hide
+```
+Endpoint ini terlindungi. Request ke endpoint ini tidak memerlukan body.
+
+### Menampilkan review
+```bash
+POST      /api/review/{id}/show
+```
+Endpoint ini terlindungi. Request ke endpoint ini tidak memerlukan body.
+
+### Membuat Review Baru
+```bash
+POST      /api/review
+```
+```yaml
+Fields:
+    reviewer_name: required, string
+    content: required, text
+```
+Endpoint ini terlindungi.
+
+### Menghapus review
+```bash
+DELETE    /api/review/{id}
+```
+Endpoint ini terlindungi. Request ke endpoint ini tidak memerlukan body.
+
+
+## Menu Satuan
+### Mengambil semua menu satuan
+```bash
+GET       /api/satuans
+```
+### Mengambil semua menu satuan dengan metadata
+```bash
+GET       /api/satuans/index
+```
+Endpoint ini terlindungi.
+
+### Mengambil menu satuan tertentu
+```bash
+GET       /api/satuan/{id}
+```
+### Membuat menu satuan baru
+```bash
+POST      /api/satuan
+```
+```yaml
+Fields:
+    nama: required, string
+```
+Endpoint ini terlindungi.
+
+### Memperbaru menu satuan tertentu
+```bash
+PUT       /api/satuan/{id}
+```
+```yaml
+Fields:
+    nama: optional, string
+```
+Endpoint ini terlindungi.
+
+### Menghapus menu satuan tertentu
+```bash
+DELETE    /api/satuan/{id}
+```
+Endpoint ini terlindungi. Request ke endpoint ini tidak memerlukan body.
+
+
+## Menu Paket
+### Mengambil semua data menu paket
+```bash
+GET       /api/pakets
+```
+### Mengambil semua data menu paket dengan metadata
+```bash
+GET       /api/pakets/index
+```
+Endpoint ini terlindungi.
+
+### Mengambil data menu paket tertentu
+```bash
+GET       /api/paket/{id}
+```
+### Mengambil semua menu satuan untuk menu paket tertentu
+```bash
+GET       /api/paket/{id}/items
+```
+### Membuat menu paket baru
+```bash
+POST      /api/paket
+```
+```yaml
+Fields:
+    name: required, string
+    harga: required, unsigned integer
+    kategori: required, 'nasi_kotak' OR 'prasmanan'
+    foto: required, file, image
+    items: optional, array<satuan_id>
+```
+Endpoint ini terlindungi.
+
+### Memperbaru menu paket tertentu
+```PUT       bash
+/api/paket/{id}
+```
+```yaml
+Fields:
+    name: optional, string
+    harga: optional, unsigned integer
+    kategori: optional, 'nasi_kotak' OR 'prasmanan'
+    foto: optional, file, image
+    items: optional, array<satuan_id>
+```
+Endpoint ini terlindungi.
+
+### Menghapus menu paket tertentu
+```bash
+DELETE    /api/paket/{id}
+```
+Endpoint ini terlindungi. Request ke endpoint ini tidak memerlukan body.
+
