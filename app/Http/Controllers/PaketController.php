@@ -93,11 +93,31 @@ class PaketController extends Controller
             'harga' => ['nullable', 'integer'],
             'kategori' => ['nullable', Rule::enum(KategoriPaket::class)],
             'items' => ['nullable', 'array' , 'exists:satuan,id'],
+            'foto' => [
+                'nullable',
+                'mimes:jpg,jpeg,png',
+                'extensions:jpg,jpeg,png'
+            ],
         ]);
 
-        $paket->nama = ! empty($valid['nama']) ? $paket->nama  : $valid['nama'];
-        $paket->harga = ! empty($valid['harga']) ? $paket->harga  : $valid['harga'];
-        $paket->kategori = ! empty($valid['kategori']) ? $paket->kategori  : $valid['kategori'];
+        $paket->nama = empty($valid['nama']) ? $paket->nama  : $valid['nama'];
+        $paket->harga = empty($valid['harga']) ? $paket->harga  : $valid['harga'];
+        $paket->kategori = empty($valid['kategori']) ? $paket->kategori  : $valid['kategori'];
+
+        $file = $request->file('foto');
+        if (! \is_null($file)) {
+            if (! $file->isValid()) {
+                return response()->json([
+                    'message' => 'File gagal terupload.'
+                ], 400);
+            }
+
+            $nama_file = Str::kebab($valid['nama']);
+            $ext = $file->extension();
+            $path = $file->storeAs('partners', "$nama_file.$ext", 'public');
+
+            $paket->foto = $path;
+        }
 
         // Only persist the model if it is modified
         if ($paket->isDirty() && ! $paket->save()) {
