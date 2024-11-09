@@ -100,9 +100,17 @@ class PaketController extends Controller
             ],
         ]);
 
-        $paket->nama = empty($valid['nama']) ? $paket->nama  : $valid['nama'];
-        $paket->harga = empty($valid['harga']) ? $paket->harga  : $valid['harga'];
-        $paket->kategori = empty($valid['kategori']) ? $paket->kategori  : $valid['kategori'];
+        if (! empty($valid['nama'])) {
+            $paket->nama = $valid['nama'];
+        }
+
+        if (! empty($valid['harga'])) {
+            $paket->harga = $valid['harga'];
+        }
+
+        if (! empty($valid['kategori'])) {
+            $paket->kategori = $valid['kategori'];
+        }
 
         $file = $request->file('foto');
         if (! \is_null($file)) {
