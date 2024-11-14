@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('reviewer_name');
             $table->text('content');
-            $table->boolean('public');
+            $table->string('job');
+            $table->integer('rating');
+            $table->boolean('public')->default(0);
             $table->timestamps();
         });
     }
