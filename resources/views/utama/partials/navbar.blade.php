@@ -55,7 +55,7 @@
                     </ul>
                 </div>
                 <div class="button-container">
-                    <a href="#" target="_blank" class="whatsapp-btn">
+                    <a href="/kontak" target="_blank" class="whatsapp-btn">
                         <i class="fab fa-whatsapp"></i> Hubungi Kami
                     </a>
                 </div>
