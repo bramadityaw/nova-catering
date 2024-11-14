@@ -150,76 +150,108 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
-        function togglePassword(inputId, buttonId) {
-            var passwordInput = document.getElementById(inputId);
-            var toggleButton = document.getElementById(buttonId);
+    const dashboardUrl = "{{ route('dashboard') }}"; // Assuming you've named the route
 
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleButton.classList.remove('fa-eye');
-                toggleButton.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                toggleButton.classList.remove('fa-eye-slash');
-                toggleButton.classList.add('fa-eye');
+    // Ambil token CSRF dari cookie
+    function getCsrfToken() {
+        const name = 'XSRF-TOKEN=';
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const cookies = decodedCookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i];
+            while (cookie.charAt(0) == ' ') {
+                cookie = cookie.substring(1);
+            }
+            if (cookie.indexOf(name) === 0) {
+                return cookie.substring(name.length, cookie.length);
             }
         }
+        return '';
+    }
 
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
+    function togglePassword(inputId, buttonId) {
+        var passwordInput = document.getElementById(inputId);
+        var toggleButton = document.getElementById(buttonId);
 
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleButton.classList.remove('fa-eye');
+            toggleButton.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            toggleButton.classList.remove('fa-eye-slash');
+            toggleButton.classList.add('fa-eye');
+        }
+    }
 
-            fetch('adminAccount.csv')
-                .then(response => response.text())
-                .then(data => {
-                    const users = parseCSV(data);
-                    const user = users.find(u => u.username === username && u.password === password);
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
 
-                    if (user) {
-                        // Store the username in localStorage
-                        localStorage.setItem('username', username);
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
 
-                        showSweetAlert("success", "Login Berhasil", "Login berhasil!");
-                        setTimeout(function() {
-                            // Redirect to admin_dashboard.html or any other page
-                            window.location.href = `admin_dashboard.html?username=${encodeURIComponent(username)}`;
-                        }, 1500);
-                    } else {
-                        showSweetAlert("error", "Login Gagal", "Username atau password salah.");
-                    }
+        // Kirim permintaan ke /api/login
+        fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': getCsrfToken() // Menambahkan token CSRF
+                },
+                body: JSON.stringify({
+                    name: username,
+                    password: password
                 })
-                .catch(error => {
-                    console.error('Error fetching the CSV:', error);
-                    showSweetAlert("error", "Login Gagal", "Gagal memuat data pengguna.");
-                });
-        });
-
-
-
-        function parseCSV(data) {
-            const lines = data.split('\n');
-            const users = [];
-            lines.forEach(line => {
-                const [username, password] = line.split(',');
-                if (username && password) {
-                    users.push({ username: username.trim(), password: password.trim() });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
                 }
+                return response.json();
+            })
+            .then(data => {
+                if (data.access_token) {
+                    // Simpan token dan user_id di sessionStorage
+                    sessionStorage.setItem('access_token', data.access_token);
+                    sessionStorage.setItem('user_id', data.user_id); // Menyimpan user_id
+                    showSweetAlert("success", "Login Berhasil", "Login berhasil!");
+                    setTimeout(function() {
+                        // Arahkan ke dashboard
+                        window.location.href = dashboardUrl;
+                    }, 1500);
+                } else {
+                    showSweetAlert("error", "Login Gagal", "Username atau password salah.");
+                }
+            })
+            .catch(error => {
+                console.error('Error during login:', error);
+                showSweetAlert("error", "Login Gagal", "Gagal memuat data pengguna.");
             });
-            return users;
-        }
+    });
 
-        function showSweetAlert(icon, title, text) {
-            Swal.fire({
-                icon: icon,
-                title: title,
-                text: text,
-                showConfirmButton: false,
-                timer: 1500
-            });
+    // Add this function to check access_token on page load
+    window.onload = function() {
+        const accessToken = sessionStorage.getItem('access_token'); // Get the token from sessionStorage
+        console.log('Access Token on Page Load:', accessToken); // Log the access token
+        const userId = sessionStorage.getItem('user_id'); // Get the user_id from sessionStorage
+        console.log('User ID on Page Load:', userId); // Log the user_id
+
+        if (accessToken) {
+            // Redirect to dashboard if token exists
+            window.location.href = dashboardUrl;
         }
-    </script>
+    }
+
+    function showSweetAlert(icon, title, text) {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+            showConfirmButton: false,
+            timer: 1500
+        });
+    }
+</script>
+
 
 </body>
 
