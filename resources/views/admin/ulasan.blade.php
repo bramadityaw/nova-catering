@@ -1,186 +1,203 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('admin.layouts.main')
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Boxicons -->
-    <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
-    <!-- Google fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <!-- Using Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="shortcut icon" href="images/nova_cathering_tab_icon.png" type="image/x-icon" sizes="32x32" />
-    <!-- My CSS -->
-    <link rel="stylesheet" href="style/admin_dashboard.css" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>Nova Cathering Admin</title>
-</head>
+@section('main')
 
-<body>
-     <!-- SIDEBAR -->
-     <section id="sidebar">
-        <a href="#" class="brand">
-            <img src="images/nova_cathering_icon.png" class="img-logo" alt="" />
-        </a>
-        <ul class="side-menu top">
+<!-- CONTENT -->
+<section id="content">
+    <nav>
+        <i class="bx bx-menu"></i>
+        <h3 class="profile">Welcome, <span id="admin_name"></span></h3>
+    </nav>
+    <main>
+        <div class="head-title">
+            <div class="left">
+                <h1>Ulasan List</h1>
+                <ul class="breadcrumb">
+                    <li>
+                        <a class="active" href="/dashboard" style="color: blue;">Dashboard</a>
+                    </li>
+                    <li><i class="bx bx-chevron-right"></i></li>
+                    <li>
+                        <a class="active" href="#" style="cursor: default;">Ulasan</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <ul class="box-info">
             <li>
-                <a href="admin_dashboard.html">
-                    <img src="images/dashboard_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="admin_naskot.html">
-                    <img src="images/nasi_kotak_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Nasi Kotak</span>
-                </a>
-            </li>
-            <li>
-                <a href="admin_prasmanan.html">
-                    <img src="images/prasmanan_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Prasmanan</span>
-                </a>
-            </li>
-            <li class="active">
-                <a href="admin_ulasan.html">
-                    <img src="images/ulasan_icon.png" class="logo" alt="" />
-                    <span class="text">Ulasan</span>
-                </a>
-            </li>
-            <li>
-                <a href="admin_account.html">
-                    <img src="images/admin_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Admin</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="logout" id="logoutButton">
-                    <i class="bx bxs-log-out-circle"></i>
-                    <span class="text">Logout</span>
-                </a>
+                <i class="bx bxs-star" style="color: #377DFF; background:#D6E4FF;"></i>
+                <span class="text">
+                    <h3 id="totalUlasan">0</h3>
+                    <p>Jumlah Ulasan</p>
+                </span>
             </li>
         </ul>
-    </section>
-    <!-- SIDEBAR -->
+        <!-- Kontainer untuk menampilkan ulasan -->
+        <section class="article-container">
+            <!-- Ulasan akan ditampilkan di sini -->
+        </section>
+    </main>
+</section>
 
-    <!-- CONTENT -->
-    <section id="content">
-        <nav>
-            <i class="bx bx-menu"></i>
-            <h3 class="profile">Welcome, <span id="admin_name"></span></h3>
-        </nav>
-        <main>
-            <div class="head-title">
-                <div class="left">
-                    <h1>Ulasan List</h1>
-                    <ul class="breadcrumb">
-                        <li>
-                            <a class="active" href="admin_dashboard.html?id=" style="color: blue;">Dashboard</a>
-                        </li>
-                        <li><i class="bx bx-chevron-right"></i></li>
-                        <li>
-                            <a class="active" href="#" style="cursor: default;">Ulasan</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>            
 
-            <ul class="box-info">
-                <li>
-                    <i class="bx bxs-star" style="color: #377DFF; background:#D6E4FF;"></i>
-                    <span class="text">
-                        <h3 id="totalUlasan">0</h3>
-                        <p>Jumlah Ulasan</p>
-                    </span>
-                </li>
-            </ul>
-        </main>
-    </section>
-    <!-- CONTENT -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const apiEndpoint = '/api/reviews/index';
 
-    <section id="content" class="article-container">
-        <!-- Resep cards will be dynamically generated here -->
-    </section>
+        async function fetchReviewsData() {
+            try {
+                const accessToken = sessionStorage.getItem('access_token');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const csvFilePath = 'ulasan.csv'; // Path to your CSV file
-    
-            async function fetchCSVData() {
-                const response = await fetch(csvFilePath);
-                const data = await response.text();
-                const rows = data.split('\n').slice(1); // Skip the header row
-                let ulasanList = [];
-    
-                rows.forEach(row => {
-                    // Trim the row to remove any leading or trailing whitespace
-                    row = row.trim();
-    
-                    // Skip empty rows
-                    if (row === '') return;
-    
-                    // Using regex to match CSV values correctly
-                    const columns = row.match(/(?:\"([^\"]*)\"|([^\",]+))/g);
-    
-                    // Check if columns were found and have the correct length
-                    if (columns && columns.length === 5) {
-                        const ulasan = {
-                            id: columns[0].replace(/\"/g, '').trim(),
-                            isi_ulasan: columns[1].replace(/\"/g, '').trim(),
-                            nama_pembeli: columns[2].replace(/\"/g, '').trim(),
-                            pekerjaan: columns[3].replace(/\"/g, '').trim(),
-                            bintang: parseInt(columns[4].replace(/\"/g, '').trim()) // Convert to integer
-                        };
-                        ulasanList.push(ulasan);
+                const response = await fetch(apiEndpoint, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json'
                     }
                 });
-    
-                document.getElementById("totalUlasan").innerText = ulasanList.length; // Set total count
-                displayUlasanCards(ulasanList); // Display the cards
-            }
-    
-            function displayUlasanCards(ulasanList) {
-                const articleContainer = document.querySelector('.article-container');
-                articleContainer.innerHTML = ''; // Clear existing cards
-    
-                ulasanList.forEach((ulasan) => {
-                    const newArticleCard = document.createElement('div');
-                    newArticleCard.classList.add('card');
-    
-                    // Create star icons based on the rating using Boxicons
-                    const stars = Array.from({ length: ulasan.bintang }, () => '<i class="bx bxs-star"></i>').join('');
-    
-                    newArticleCard.innerHTML = `
-                        <div class="card-title">
-                            <p id="nama_pembeli">${ulasan.nama_pembeli}</p>
-                            <div class="title">
-                                <div class="stars">${stars}</div>
-                                <p><span id="pekerjaan">${ulasan.pekerjaan}</span></p>
-                                <p>${ulasan.isi_ulasan}</p>
-                            
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <div class="action-buttons">
-                                <button class="btn-delete">Hapus</button>
-                            </div>
-                        </div>
-                    `;
-    
-                    articleContainer.appendChild(newArticleCard);
-                });
-            }
-    
-            fetchCSVData(); // Fetch CSV data on page load
-        });
-    </script>
-    
-    
-    
-</body>
 
-</html>
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const ulasanList = await response.json();
+                document.getElementById("totalUlasan").innerText = ulasanList.length;
+                displayUlasanCards(ulasanList);
+            } catch (error) {
+                console.error("Error fetching reviews data:", error);
+            }
+        }
+
+        function displayUlasanCards(ulasanList) {
+            const articleContainer = document.querySelector('.article-container');
+            articleContainer.innerHTML = '';
+
+            const displayedContainer = document.createElement('div');
+            displayedContainer.classList.add('displayed-reviews');
+            displayedContainer.innerHTML = `<h3 style="margin-left: 0px; margin-top: 50px;">Data Tertampil</h3>`;
+
+            const hiddenContainer = document.createElement('div');
+            hiddenContainer.classList.add('hidden-reviews');
+            hiddenContainer.innerHTML = `<h3 style="margin-left: 0px; margin-top: 50px;">Data Tersembunyi</h3>`;
+
+            ulasanList.forEach((ulasan) => {
+                const newArticleCard = document.createElement('div');
+                newArticleCard.classList.add('card');
+
+                const stars = Array.from({
+                    length: ulasan.rating
+                }, () => '<i class="bx bxs-star" style="color:#F570E6;"></i>').join('');
+                const buttonText = ulasan.public ? "Sembunyikan" : "Tampilkan";
+
+                newArticleCard.innerHTML = `
+            <div class="card-title">
+                <p id="nama_pembeli">${ulasan.reviewer_name}</p>
+                <div class="title">
+                    <div class="stars">${stars}</div>
+                    <p><span id="pekerjaan">${ulasan.job}</span></p>
+                    <p>${ulasan.content}</p>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <div class="card-content">
+                    <div class="action-buttons">
+                        <button class="btn-edit" data-id="${ulasan.id}" data-public="${ulasan.public}">${buttonText}</button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="action-buttons">
+                        <button class="btn-delete" data-id="${ulasan.id}">Hapus</button>
+                    </div>
+                </div>
+            </div>
+            `;
+
+                if (ulasan.public) {
+                    displayedContainer.appendChild(newArticleCard);
+                } else {
+                    hiddenContainer.appendChild(newArticleCard);
+                }
+            });
+
+            articleContainer.appendChild(displayedContainer);
+            articleContainer.appendChild(hiddenContainer);
+
+            document.querySelectorAll('.btn-edit').forEach(button => {
+                button.addEventListener('click', handleEditButtonClick);
+            });
+
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', handleDeleteButtonClick);
+            });
+        }
+
+        async function handleEditButtonClick(event) {
+            const button = event.target;
+            const reviewId = button.getAttribute('data-id');
+            const isPublic = button.getAttribute('data-public') === '1';
+            const newStatusEndpoint = isPublic ? `/api/review/${reviewId}/hide` : `/api/review/${reviewId}/show`;
+
+            try {
+                const accessToken = sessionStorage.getItem('access_token');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                const response = await fetch(newStatusEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    alert(`Review ${isPublic ? 'hidden' : 'shown'} successfully.`);
+                    location.reload();
+                } else {
+                    throw new Error(`Failed to update review status. Status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error("Error updating review status:", error);
+            }
+        }
+
+        async function handleDeleteButtonClick(event) {
+            const button = event.target;
+            const reviewId = button.getAttribute('data-id');
+            const deleteEndpoint = `/api/review/${reviewId}`;
+
+            try {
+                const accessToken = sessionStorage.getItem('access_token');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                const response = await fetch(deleteEndpoint, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    alert("Review deleted successfully.");
+                    location.reload();
+                } else {
+                    throw new Error(`Failed to delete review. Status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error("Error deleting review:", error);
+            }
+        }
+
+        fetchReviewsData();
+    });
+</script>
+
+
+
+
+@endsection
