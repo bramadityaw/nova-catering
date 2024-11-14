@@ -10,8 +10,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('menus', 'paket');
-        Schema::rename('menu_items', 'satuan');
+        // Schema::rename('menus', 'paket');
+        // Schema::rename('menu_items', 'satuan');
     }
 
     /**
@@ -19,7 +19,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::rename('paket', 'menus');
-        Schema::rename('satuan', 'menu_items');
+        // Schema::rename('paket', 'menus');
+        // Schema::rename('satuan', 'menu_items');
     }
 };
