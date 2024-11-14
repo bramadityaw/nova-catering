@@ -1,165 +1,269 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('admin.layouts.main')
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+@section('main')
+<section id="content">
+    <nav>
+        <i class="bx bx-menu"></i>
+        <h3 class="profile">Welcome, <span id="admin_name"></span></h3>
+    </nav>
+    <div class="content2">
+        <div class="card-artikel">
+            <h2>{{ request()->has('id') ? 'Edit Prasmanan' : 'Tambah Prasmanan' }}</h2>
+        </div>
+    </div>
+</section>
 
-    <!-- Boxicons -->
-    <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
-    <!-- Google fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <!-- Using Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="shortcut icon" href="images/nova_cathering_tab_icon.png" type="image/x-icon" sizes="32x32" />
-    <!-- My CSS -->
-    <link rel="stylesheet" href="style/admin_dashboard.css" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+<section id="content">
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>Nova Cathering Admin</title>
-    <style>
-        textarea {
-    width: 100%;         /* Full width of the container */
-    max-width: 100%;     /* Prevents it from expanding beyond container */
-    height: 100px;       /* Fixed height */
-    resize: none;        /* Disable manual resizing */
-    overflow: auto;      /* Adds a scrollbar if content overflows */
-    padding: 10px;       /* Adds padding inside the textarea */
-    font-size: 16px;     /* Sets a readable font size */
-    border: 1px solid #ccc; /* Optional: a border for better visibility */
-    border-radius: 5px;  /* Optional: rounded corners */
-}
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <img src="{{ asset('images/loading-spinner.gif') }}" alt="Loading..." style="width: 50px; height: 50px;" />
+    </div>
 
-    </style>
-</head>
-
-<body>
-    <!-- SIDEBAR -->
-    <section id="sidebar">
-        <a href="#" class="brand">
-            <img src="images/nova_cathering_icon.png" class="img-logo" alt="" />
-        </a>
-        <ul class="side-menu top">
-            <li class="active">
-                <a href="admin_dashboard.html">
-                    <img src="images/dashboard_icon.png" class="logo" alt="" />
-                    <span class="text">Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="admin_naskot.html">
-                    <img src="images/nasi_kotak_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Nasi Kotak</span>
-                </a>
-            </li>
-            <li>
-                <a href="admin_prasmanan.html">
-                    <img src="images/prasmanan_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Prasmanan</span>
-                </a>
-            </li>
-            <li>
-                <a href="admin_ulasan.html">
-                    <img src="images/ulasan_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Ulasan</span>
-                </a>
-            </li>
-            <li>
-                <a href="admin_account.html">
-                    <img src="images/admin_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Admin</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="logout" id="logoutButton">
-                    <i class="bx bxs-log-out-circle"></i>
-                    <span class="text">Logout</span>
-                </a>
-            </li>
-        </ul>
-    </section>
-    <!-- SIDEBAR -->
-
-    <section id="content">
-        <nav>
-            <i class="bx bx-menu"></i>
-        </nav>
-        <div class="content2">
-            <div class="card-artikel">
-                <h2>Tambah Prasmanan</h2>
+    
+    <form class="postingan" id="prasmananForm" method="POST" action="{{ request()->has('id') ? route('paket.update', request('id')) : route('admin.paket.store') }}" enctype="multipart/form-data">
+        @csrf
+        @if(request()->has('id'))
+            @method('PATCH') <!-- Add PATCH method if ID exists -->
+        @endif
+        <div class="card-artikel">
+            <h3 style="margin-bottom: 16px; color:grey;">Judul Prasmanan</h3>
+            <div class="artikel-title">
+                <input type="text" id="judul_prasmanan" name="judul_prasmanan" placeholder="Judul Prasmanan" required />
             </div>
         </div>
-    </section>
-    <section id="content">
-        <form class="postingan" id="prasmananForm" method="post" action="">
-            <div class="card-artikel">
-                <div class="artikel-title">
-                    <input type="text" id="id" name="id" placeholder="ID (e.g., Prasmanan A)" required />
-                </div>
+        <div class="card-artikel">
+            <h3 style="margin-bottom: 16px; color:grey;">Isi Menu</h3>
+            @include('admin.partials.dropdownNaskot')
+        </div>
+        <div class="card-artikel">
+            <h3 style="margin-bottom: 16px; color:grey;">Harga</h3>
+            <div class="artikel-title">
+                <input type="text" id="harga" name="harga" placeholder="Rp" required />
             </div>
-    
-            <div class="card-artikel">
-                <div class="artikel-title">
-                    <input type="text" id="nama_prasmanan" name="nama_prasmanan" placeholder="Nama Prasmanan (e.g., Paket Sederhana)" required />
-                </div>
+        </div>
+        <div class="card-artikel">
+            <h3 style="margin-bottom: 16px; color:grey;">Gambar</h3>
+            <div class="artikel-title">
+                <input type="file" id="gambar_prasmanan" name="gambar_prasmanan" accept="image/*" />
             </div>
-    
-            <div class="card-artikel">
-                <div class="artikel-title">
-                    <input type="number" id="harga" name="harga" placeholder="Harga Prasmanan (e.g., 65000)" required />
-                </div>
+        </div>
+        <div class="card-artikel">
+            <h3 style="margin-bottom: 16px; color:grey;">Deskripsi Singkat</h3>
+            <div class="artikel-title">
+                <textarea id="deskripsi_singkat" name="deskripsi_singkat" placeholder="Deskripsi Singkat" required></textarea>
             </div>
-    
-            <div class="card-artikel">
-                <div class="artikel-title">
-                    <input type="url" id="gambar_prasmanan" name="gambar_prasmanan" placeholder="Link Gambar Prasmanan (e.g., images/prasmanan.jpeg)" required />
-                </div>
-            </div>
-    
-            <div class="card-artikel">
-                <div class="artikel-title">
-                    <textarea id="deskripsi_singkat" name="deskripsi_singkat" placeholder="Deskripsi Singkat (e.g., Paket sederhana cocok untuk acara kecil.)" required></textarea>
-                </div>
-            </div>
-    
-            <div class="card-artikel">
-                <div class="artikel-title">
-                    <textarea id="menu" name="menu" placeholder="Daftar Menu (e.g., Nasi Putih; Ayam Goreng; Sambal; Tahu; Tempe)" required></textarea>
-                </div>
-            </div>
-    
-            <div class="kanan">
-                <div class="button-artikel" style="margin-top:10px;">
-                    <div class="buttons" style="flex-direction: row; margin-bottom:1rem;">
-                        <button type="submit" class="btn-simpan">
-                            <img src="images/floppy-disk.png" alt="Save Icon" class="button-icon" />
-                            <p>Simpan</p>
-                        </button>
-                        <button type="reset" class="btn-batal" style="margin-left: 1.5rem;">
-                            <img src="images/delete-left.png" alt="Reset Icon" class="button-icon" />
-                            <p>Batal</p>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </section>
-    
+        </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const batalButton = document.querySelector(".btn-batal");
+        <div class="kanan">
+            <div class="button-artikel" style="margin-top:10px;">
+                <div class="buttons" style="flex-direction: row; margin-bottom:1rem;">
+                    <button type="submit" class="btn-simpan">
+                        <img src="{{ asset('images/floppy-disk.png') }}" alt="Save Icon" class="button-icon" />
+                        <p>Simpan</p>
+                    </button>
+                    <button type="reset" class="btn-batal" style="margin-left: 1.5rem;">
+                        <img src="{{ asset('images/delete-left.png') }}" alt="Reset Icon" class="button-icon" />
+                        <p>Batal</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
 
-            batalButton.addEventListener("click", function() {
-                window.location.href = 'admin_prasmanan.html';
+<script>
+function getAccessToken() {
+    return sessionStorage.getItem('access_token');
+}
+
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("prasmananForm");
+    const accessToken = getAccessToken();
+    const csrfToken = getCsrfToken();
+
+    if (!form) {
+        console.error("Form element not found.");
+        return;
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id'); // Get 'id' from the URL
+
+    if (id) {
+        form.action = `/api/paket/${id}`; // Set the action for updating the specific package
+        document.querySelector("button[type='submit']").textContent = "Update";
+
+        fetch(`/api/pakets/${id}`, {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.data) {
+                document.getElementById("judul_prasmanan").value = data.data.nama || '';
+                document.getElementById("deskripsi_singkat").value = data.data.deskripsi || '';
+                document.getElementById("harga").value = formatRupiah(data.data.harga.toString()) || '';
+
+                if (data.data.foto) {
+                    const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+                    if (imagePreviewContainer) {
+                        const imagePreview = document.createElement('img');
+                        imagePreview.src = data.data.foto;
+                        imagePreview.alt = "Image preview";
+                        imagePreview.style.maxWidth = "200px";
+                        imagePreviewContainer.appendChild(imagePreview);
+                    }
+                }
+
+                selectedIds = data.data.items.map(item => item.id_satuan);
+                updateSelectedOptions();
+            }
+        })
+        .catch(error => console.error("Error fetching data:", error));
+    }
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Processing...',
+            text: 'Please wait while we save your data.',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const formData = {
+            nama: document.getElementById("judul_prasmanan").value,
+            harga: document.getElementById("harga").value.replace(/[Rp.\s]/g, ''), // Remove currency format for submission
+            deskripsi: document.getElementById("deskripsi_singkat").value,
+            kategori: "prasmanan",
+            items: [],
+            foto: null
+        };
+
+        const selectedItems = document.querySelectorAll('.multi-select-option.multi-select-selected');
+        formData.items = Array.from(selectedItems)
+            .map(item => item.getAttribute("data-value"))
+            .join(',');
+
+        const imageFile = document.getElementById("gambar_prasmanan").files[0];
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                formData.foto = reader.result.split(',')[1];
+                submitFormData(formData, id);
+            };
+            reader.readAsDataURL(imageFile);
+        } else {
+            submitFormData(formData, id);
+        }
+    });
+
+    function submitFormData(formData, id) {
+        const method = id ? 'PATCH' : 'POST';
+        const url = id ? `/api/paket/${id}` : '/api/paket';
+
+        fetch(url, {
+            method: method,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            Swal.close(); // Close loading indicator
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then(data => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Data Saved',
+                text: 'Your data has been successfully saved!',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = '/admin/prasmanan';
+            });
+        })
+        .catch(error => {
+            console.error("Error submitting data:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Save Failed',
+                text: 'An error occurred while saving your data. Please try again.',
+                confirmButtonText: 'OK'
             });
         });
-    </script>
+    }
 
-    <script src="js/admin_dashboard.js" type="text/javascript"></script>
-</body>
+    function formatRupiah(angka, prefix = "Rp ") {
+        let number_string = angka.replace(/[^,\d]/g, "").toString(),
+            split = number_string.split(","),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-</html>
+        if (ribuan) {
+            let separator = sisa ? "." : "";
+            rupiah += separator + ribuan.join(".");
+        }
+
+        rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+        return prefix + rupiah;
+    }
+
+    const hargaInput = document.getElementById("harga");
+    if (hargaInput) {
+        hargaInput.addEventListener("input", function(event) {
+            let value = event.target.value.replace(/[Rp.\s]/g, '');
+            event.target.value = formatRupiah(value);
+        });
+    }
+});
+
+function updateSelectedOptions() {
+    setTimeout(() => {
+        const headerElement = document.querySelector('.multi-select-header');
+        const placeholderElement = headerElement.querySelector('.multi-select-header-placeholder');
+
+        if (placeholderElement) {
+            placeholderElement.style.display = 'none';
+        }
+
+        selectedIds.forEach(id => {
+            const optionToSelect = document.querySelector(`.multi-select-option[data-value="${id}"]`);
+            if (optionToSelect) {
+                optionToSelect.classList.add('multi-select-selected');
+
+                const headerOptionSpan = document.createElement('span');
+                headerOptionSpan.classList.add('multi-select-header-option');
+                headerOptionSpan.textContent = optionToSelect.querySelector('.multi-select-option-text').textContent;
+
+                headerOptionSpan.style.marginTop = '8px';
+                headerOptionSpan.style.marginRight = '8px';
+
+                headerElement.appendChild(headerOptionSpan);
+            }
+        });
+    }, 0);
+}
+
+</script>
+
+
+@endsection
