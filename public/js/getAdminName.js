@@ -11,7 +11,6 @@ function getUserId() {
 // Check for access token on page load
 window.onload = function() {
     const accessToken = getAccessToken();
-    console.log('Access Token on Page Load:', accessToken);
 
     // Redirect to login if token is not found
     if (!accessToken) {
