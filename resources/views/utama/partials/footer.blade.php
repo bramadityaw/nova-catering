@@ -3,19 +3,15 @@
         <div class="footer-top">
             <div class="footer-area text-center">
                 <div class="footer-logo">
-                    <a href="index.html"><img src="/images/logo2.png" alt="footer-logo"></a>
-                </div>
-                <div class="scocial-media">
-                    <a href="#" class="facebook"><i class="icofont-whatsapp"></i></a>
-                    <a href="#" class="twitter"><i class="icofont-instagram"></i></a>
+                    <a href="/"><img src="/images/logo2.png" alt="footer-logo"></a>
                 </div>
                 <div class="footer-menu">
                     <ul>
-                        <li><a href="beranda.html">Beranda</a></li>
-                        <li><a href="menu-nasikotak.html">Nasi Kotak</a></li>
-                        <li><a href="menu-prasmanan.html">Prasmanan</a></li>
-                        <li><a href="ulasan.html">Ulasan</a></li>
-                        <li><a href="kontak.html">Kontak</a></li>
+                        <li><a href="/">Beranda</a></li>
+                        <li><a href="/nasikotak">Nasi Kotak</a></li>
+                        <li><a href="/prasmanan">Prasmanan</a></li>
+                        <li><a href="/ulasan">Ulasan</a></li>
+                        <li><a href="/kontak">Kontak</a></li>
                     </ul>
                 </div>
             </div>

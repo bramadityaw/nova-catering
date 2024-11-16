@@ -31,4 +31,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // config/services.php
+    'hcaptcha' => [
+        'secret' => env('HCAPTCHA_SECRET'), // Kunci rahasia dari hCaptcha
+        'sitekey' => env('HCAPTCHA_SITE_KEY'), // Kunci situs dari hCaptcha
+    ],
+
+
+
 ];

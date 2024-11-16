@@ -1,182 +1,222 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('admin.layouts.main')
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Boxicons -->
-    <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
-    <!-- Google fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <!-- Using Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="shortcut icon" href="images/nova_cathering_tab_icon.png" type="image/x-icon" sizes="32x32" />
-    <!-- My CSS -->
-    <link rel="stylesheet" href="style/admin_dashboard.css" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>Nova Cathering Admin</title>
-</head>
+@section('main')
+<!-- CONTENT -->
+<section id="content">
+    <nav>
+        <i class="bx bx-menu"></i>
+        <h3 class="profile">Welcome, <span id="admin_name"></span></h3>
+    </nav>
+    <main>
+        <div class="head-title">
+            <div class="left">
+                <h1>Prasmanan List</h1>
+                <ul class="breadcrumb">
+                    <li>
+                        <a class="active" href="/dashboard" style="color: blue;">Dashboard</a>
+                    </li>
+                    <li><i class="bx bx-chevron-right"></i></li>
+                    <li>
+                        <a class="active" href="#" style="cursor: default;">Prasmanan</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="button_postingan">
+            <a href="/admin/edit/prasmanan" id="addResepLink"><button><i class="bx bx-plus" id="add_artikel"></i>Tambah</button></a>
+        </div>
 
-<body>
-     <!-- SIDEBAR -->
-     <section id="sidebar">
-        <a href="#" class="brand">
-            <img src="images/nova_cathering_icon.png" class="img-logo" alt="" />
-        </a>
-        <ul class="side-menu top">
+
+
+        <ul class="box-info">
             <li>
-                <a href="admin_dashboard.html">
-                    <img src="images/dashboard_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="admin_naskot.html">
-                    <img src="images/nasi_kotak_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Nasi Kotak</span>
-                </a>
-            </li>
-            <li class="active">
-                <a href="admin_prasmanan.html">
-                    <img src="images/prasmanan_icon.png" class="logo" alt="" />
-                    <span class="text">Prasmanan</span>
-                </a>
-            </li>
-            <li>
-                <a href="admin_ulasan.html">
-                    <img src="images/ulasan_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Ulasan</span>
-                </a>
-            </li>
-            <li>
-                <a href="admin_account.html">
-                    <img src="images/admin_icon_inactive.png" class="logo" alt="" />
-                    <span class="text">Admin</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="logout" id="logoutButton">
-                    <i class="bx bxs-log-out-circle"></i>
-                    <span class="text">Logout</span>
-                </a>
+                <i class="bx bxs-bowl-hot" style="color: #487C07; background:#D0F89F;"></i>
+                <span class="text">
+                    <h3 id="totalPrasmanan">0</h3>
+                    <p>Jumlah Prasmanan</p>
+                </span>
             </li>
         </ul>
-    </section>
-    <!-- SIDEBAR -->
 
-    <!-- CONTENT -->
-    <section id="content">
-        <nav>
-            <i class="bx bx-menu"></i>
-            <h3 class="profile">Welcome, <span id="admin_name"></span></h3>
-        </nav>
-        <main>
-            <div class="head-title">
-                <div class="left">
-                    <h1>Prasmanan List</h1>
-                    <ul class="breadcrumb">
-                        <li>
-                            <a class="active" href="admin_dashboard.html?id=" style="color: blue;">Dashboard</a>
-                        </li>
-                        <li><i class="bx bx-chevron-right"></i></li>
-                        <li>
-                            <a class="active" href="#" style="cursor: default;">Prasmanan</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="button_postingan">
-                <a href="admin_add_prasmanan.html" id="addResepLink"><button><i class="bx bx-plus" id="add_artikel"></i>Tambah</button></a>
-            </div>
+        <section class="article-container">
+            <!-- Resep cards will be dynamically generated here -->
+        </section>
+    </main>
+</section>
+<!-- CONTENT -->
 
-            
 
-            <ul class="box-info">
-                <li>
-                    <i class="bx bxs-bowl-hot" style="color: #FFD69D; background:#FF9500;"></i>
-                    <span class="text">
-                        <h3 id="totalPrasmanan">0</h3>
-                        <p>Jumlah Prasmanan</p>
-                    </span>
-                </li>
-            </ul>
-        </main>
-    </section>
-    <!-- CONTENT -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const apiEndpoint = '/api/pakets'; // API endpoint URL
 
-    <section id="content" class="article-container">
-        <!-- Resep cards will be dynamically generated here -->
-    </section>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const csvFilePath = 'prasmanan.csv'; // Path to your CSV file
-    
-            async function fetchCSVData() {
-                const response = await fetch(csvFilePath);
-                const data = await response.text();
-                const rows = data.split('\n').slice(1); // Skip the header row
+        async function fetchPaketData() {
+            try {
+                const response = await fetch(apiEndpoint);
+                const data = await response.json(); // Parse JSON response
                 let resepList = [];
-    
-                rows.forEach(row => {
-                    const columns = row.split(',');
-                    if (columns.length > 1) { // Check if the row has valid data
+
+                data.forEach(paket => {
+                    // Hanya menampilkan paket dengan kategori nasi_kotak
+                    if (paket.kategori.toLowerCase() === 'prasmanan') {
+                        let formattedId = paket.id;
+
+                        formattedId = formattedId.replace(/NasiKotak/gi, "Nasi Kotak ");
+                        formattedId = formattedId.replace(/Prasmanan/gi, "Prasmanan ");
+
+                        // Format harga ke mata uang Indonesia (IDR)
+                        // Format harga ke mata uang Indonesia (IDR) tanpa spasi dan desimal
+                        const formattedHarga = new Intl.NumberFormat('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR',
+                            minimumFractionDigits: 0 // Menghilangkan desimal
+                        }).format(paket.harga).replace(/\s/g, ''); // Menghilangkan spasi
+
                         const resep = {
-                            id: columns[0],
-                            nama_prasmanan: columns[1],
-                            harga: columns[2],
-                            gambar_prasmanan: columns[3],
-                            deskripsi_singkat: columns[4].replace(/"/g, ''), // Remove quotes
-                            menu: columns[5].replace(/"/g, '').split(';') // Split menu items
+                            id: formattedId, // Using formatted ID with specific spacing
+                            id_origin: paket.id_origin, // Original ID from API
+                            judul_prasmanan: paket.nama,
+                            harga: formattedHarga, // Gunakan harga yang sudah diformat
+                            gambar_prasmanann: paket.foto,
+                            deskripsi_singkat: paket.deskripsi,
+                            menu: paket.items.map(item => item.nama).join(', ')
                         };
                         resepList.push(resep);
                     }
                 });
-    
+
                 document.getElementById("totalPrasmanan").innerText = resepList.length; // Set total count
                 displayResepCards(resepList); // Display the cards
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
-    
-            function displayResepCards(resepList) {
-                const articleContainer = document.querySelector('.article-container');
-                articleContainer.innerHTML = ''; // Clear existing cards
-    
-                resepList.forEach((resep, index) => {
-                    const newArticleCard = document.createElement('div');
-                    newArticleCard.classList.add('card');
-    
-                    newArticleCard.innerHTML = `
-                        <div class="img-container">
-                            <img src="${resep.gambar_prasmanan}" alt="Gambar Prasmanan" />
-                        </div>
-                        <div class="card-title">
-                            <p id="judul_prasmanan">${resep.nama_prasmanan}</p>
-                            <div class="title">
-                                <p>Id Prasmanan: <span id="id_prasmanan">${resep.id}</span></p>
-                                <p>Harga: ${resep.harga}</p>
-                                <p>Deskripsi: ${resep.deskripsi_singkat}</p>
-                                <p>Menu: ${resep.menu.join(', ')}</p>
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <div class="action-buttons">
-                                <button class="btn-edit">Ubah</button>
-                                <button class="btn-delete">Hapus</button>
-                            </div>
-                        </div>
-                    `;
-    
-                    articleContainer.appendChild(newArticleCard);
-                });
-            }
-    
-            fetchCSVData(); // Fetch CSV data on page load
-        });
-    </script>
-    
-</body>
+        }
 
-</html>
+        function displayResepCards(resepList) {
+            const articleContainer = document.querySelector('.article-container');
+            articleContainer.innerHTML = ''; // Clear existing cards
+
+            resepList.forEach((resep, index) => {
+                const newArticleCard = document.createElement('div');
+                newArticleCard.classList.add('card');
+
+                newArticleCard.innerHTML = `
+            <div class="img-container">
+                <img src="${resep.gambar_prasmanann}" alt="Gambar Prasmanan" />
+            </div>
+            <div class="card-title">
+                <p id="judul_prasmanan">${resep.judul_prasmanan}</p>
+                <div class="title">
+                    <p><span style="font-weight: bold; color: gray;">Id Prasmanan:</span> <span id="id_prasmanann">${resep.id}</span></p>
+                    <p><span style="font-weight: bold; color: gray;">Harga:</span> ${resep.harga}</p>
+                    <p><span style="font-weight: bold; color: gray;">Deskripsi:</span> ${resep.deskripsi_singkat}</p>
+                    <p><span style="font-weight: bold; color: gray;">Menu:</span> ${resep.menu}</p>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="action-buttons">
+                    <button class="btn-edit" data-id="${resep.id_origin}">Ubah</button>
+                    <button class="btn-delete" data-id="${resep.id_origin}">Hapus</button>
+                </div>
+            </div>
+        `;
+
+                articleContainer.appendChild(newArticleCard);
+            });
+
+            // Tambahkan event listener untuk tombol edit
+            document.querySelectorAll('.btn-edit').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const paketId = event.target.getAttribute('data-id'); // Ambil ID asli
+                    const editUrl = `/admin/edit/prasmanan?id=${paketId}`; // Route dengan parameter terenkripsi
+
+                    // Arahkan ke halaman edit dengan ID terenkripsi
+                    window.location.href = editUrl;
+                });
+            });
+
+            // Tambahkan event listener untuk tombol hapus
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const paketId = event.target.getAttribute('data-id');
+                    await deletePaket(paketId); // Panggil fungsi hapus paket
+                });
+            });
+        }
+
+        async function deletePaket(paketId) {
+            const accessToken = sessionStorage.getItem('access_token');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Ambil CSRF token dari meta tag
+
+            if (!accessToken) {
+                console.error("Access token tidak ditemukan atau telah kadaluarsa");
+                return;
+            }
+
+            // Tampilkan konfirmasi SweetAlert
+            const result = await Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda tidak dapat mengembalikan data yang telah dihapus!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    // Tampilkan SweetAlert loading
+                    Swal.fire({
+                        title: 'Menghapus...',
+                        text: 'Mohon tunggu beberapa saat',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    const deleteEndpoint = `${apiEndpoint}/${paketId}`;
+                    const response = await fetch(deleteEndpoint, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`, // Menyertakan token akses
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken // Menyertakan CSRF token jika diperlukan
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Gagal menghapus data. Status: ${response.status}`);
+                    }
+
+                    // Tampilkan pesan sukses setelah berhasil menghapus
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Data berhasil dihapus.',
+                        icon: 'success',
+                        timer: 2000, // Tutup otomatis setelah 2 detik
+                        showConfirmButton: false
+                    });
+
+                    fetchPaketData(); // Refresh data setelah menghapus
+                } catch (error) {
+                    console.error("Error menghapus paket:", error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Gagal menghapus data. Silakan coba lagi.',
+                        icon: 'error'
+                    });
+                }
+            }
+        }
+
+
+        fetchPaketData(); // Fetch API data on page load
+    });
+</script>
+
+
+
+
+@endsection

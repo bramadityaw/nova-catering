@@ -57,6 +57,9 @@ class PartnerController extends Controller
 
         $nama = $validated['nama'];
 
+        // Ganti spasi dengan garis bawah pada nama partner
+        $nama = str_replace(' ', '_', $nama);
+
         $file = $request->file('logo');
 
         if (! $file->isValid()) {
@@ -100,6 +103,10 @@ class PartnerController extends Controller
 
         if (! empty($valid['nama'])) {
             $nama = $valid['nama'];
+
+            // Ganti spasi dengan garis bawah pada nama partner
+            $nama = str_replace(' ', '_', $nama);
+
             $partner->nama = $nama;
         }
 
