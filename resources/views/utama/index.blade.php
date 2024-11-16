@@ -71,59 +71,11 @@
         </div>
         <div class="section-wrapper">
             <div class="row">
-                <div class="col-xl-3 col-md-6 col-12"><a href="#">
-                        <div class="product-item">
-                            <div class="product-thumb">
-                                <img src="assets/images/paketA.png" alt="food-product">
-                                <span class="price">70k</span>
-                            </div>
-                            <div class="product-content">
-                                <p>Prasmanan</p>
-                                <h6>Paket A</h6>
-                            </div>
-                    </a></div>
             </div>
-            <div class="col-xl-3 col-md-6 col-12"><a href="#">
-                    <div class="product-item">
-                        <div class="product-thumb">
-                            <img src="assets/images/paketA.png" alt="food-product">
-                            <span class="price">70k</span>
-                        </div>
-                        <div class="product-content">
-                            <p>Prasmanan</p>
-                            <h6>Paket A</h6>
-                        </div>
-                </a></div>
         </div>
-        <div class="col-xl-3 col-md-6 col-12"><a href="#">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img src="assets/images/paketA.png" alt="food-product">
-                        <span class="price">70k</span>
-                    </div>
-                    <div class="product-content">
-                        <p>Prasmanan</p>
-                        <h6>Paket A</h6>
-                    </div>
-            </a></div>
-    </div>
-    <div class="col-xl-3 col-md-6 col-12"><a href="#">
-            <div class="product-item">
-                <div class="product-thumb">
-                    <img src="assets/images/paketA.png" alt="food-product">
-                    <span class="price">70k</span>
-                </div>
-                <div class="product-content">
-                    <p>Prasmanan</p>
-                    <h6>Paket A</h6>
-                </div>
-        </a></div>
-    </div>
-    </div>
-    <div class="text-center" style="margin-top: 40px;">
-        <a href="/nasikotak" class="food-btn style-2"><span>Lihat Semua</span></a>
-    </div>
-    </div>
+        <div class="text-center" style="margin-top: 40px;">
+            <a href="/nasikotak" class="food-btn style-2"><span>Lihat Semua</span></a>
+        </div>
     </div>
 </section>
 
@@ -306,66 +258,66 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Replace with the actual API URL
-    const apiUrl = '/api/paket/naskot/limited'; // Assuming you're on the same domain as your backend
+    document.addEventListener('DOMContentLoaded', function() {
+        // Replace with the actual API URL
+        const apiUrl = '/api/paket/naskot/limited'; // Assuming you're on the same domain as your backend
 
-    // Function to format the category name
-    function formatCategoryName(kategori) {
-        return kategori
-            .split('_') // Split by underscore
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
-            .join(' '); // Join with spaces
-    }
-
-    // Function to format the price
-    function formatPrice(price) {
-        if (price >= 1000000) {
-            return `${(price / 1000).toFixed(0)}k`; // Format for 1,000,000 and above
-        } else if (price >= 1000) {
-            return `${(price / 1000).toFixed(0)}k`; // Format for 1,000 and above
+        // Function to format the category name
+        function formatCategoryName(kategori) {
+            return kategori
+                .split('_') // Split by underscore
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+                .join(' '); // Join with spaces
         }
-        return price; // Leave as-is if below 1,000
-    }
 
-    // Function to fetch the limited nasi_kotak data
-    async function fetchLimitedNasiKotak() {
-        try {
-            // Make a GET request to the API
-            const response = await fetch(apiUrl, {
-                method: 'GET', // Explicitly set the method to GET
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+        // Function to format the price
+        function formatPrice(price) {
+            if (price >= 1000000) {
+                return `${(price / 1000).toFixed(0)}k`; // Format for 1,000,000 and above
+            } else if (price >= 1000) {
+                return `${(price / 1000).toFixed(0)}k`; // Format for 1,000 and above
+            }
+            return price; // Leave as-is if below 1,000
+        }
 
-            // Parse the response as JSON
-            const result = await response.json();
-            
-            // Check if the response is successful
-            if (result.message === 'Successfully retrieved 4 nasi_kotak items') {
-                const data = result.data;
-                const productsContainer = document.querySelector('.section-wrapper .row');
+        // Function to fetch the limited nasi_kotak data
+        async function fetchLimitedNasiKotak() {
+            try {
+                // Make a GET request to the API
+                const response = await fetch(apiUrl, {
+                    method: 'GET', // Explicitly set the method to GET
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-                // Clear the existing products
-                productsContainer.innerHTML = '';
+                // Parse the response as JSON
+                const result = await response.json();
 
-                // Loop through each product and create HTML dynamically
-                data.forEach(paket => {
-                    const productItem = document.createElement('div');
-                    productItem.classList.add('col-xl-3', 'col-md-6', 'col-12');
+                // Check if the response is successful
+                if (result.message === 'Successfully retrieved 4 nasi_kotak items') {
+                    const data = result.data;
+                    const productsContainer = document.querySelector('.section-wrapper .row');
 
-                    const productImage = document.createElement('img');
-                    productImage.src = paket.foto;
-                    productImage.alt = 'food-product';
-                    
-                    // Apply image styles for fill and crop
-                    productImage.style.width = '100%';
-                    productImage.style.height = '100%';
-                    productImage.style.objectFit = 'cover';  // Ensures the image covers the container and crops excess
-                    productImage.style.objectPosition = 'center';  // Ensures the image is centered within the container
+                    // Clear the existing products
+                    productsContainer.innerHTML = '';
 
-                    productItem.innerHTML = `
+                    // Loop through each product and create HTML dynamically
+                    data.forEach(paket => {
+                        const productItem = document.createElement('div');
+                        productItem.classList.add('col-xl-3', 'col-md-6', 'col-12');
+
+                        const productImage = document.createElement('img');
+                        productImage.src = paket.foto;
+                        productImage.alt = 'food-product';
+
+                        // Apply image styles for fill and crop
+                        productImage.style.width = '100%';
+                        productImage.style.height = '100%';
+                        productImage.style.objectFit = 'cover'; // Ensures the image covers the container and crops excess
+                        productImage.style.objectPosition = 'center'; // Ensures the image is centered within the container
+
+                        productItem.innerHTML = `
                         <a href="#">
                             <div class="product-item">
                                 <div class="product-thumb">
@@ -382,21 +334,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         
                     `;
 
-                    // Append the new product to the container
-                    productsContainer.appendChild(productItem);
-                });
-            } else {
-                console.error('Failed to fetch nasi kotak items:', result.message);
+                        // Append the new product to the container
+                        productsContainer.appendChild(productItem);
+                    });
+                } else {
+                    console.error('Failed to fetch nasi kotak items:', result.message);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
-        } catch (error) {
-            console.error('Error fetching data:', error);
         }
-    }
 
-    // Call the function to fetch and display the limited nasi kotak data
-    fetchLimitedNasiKotak();
-});
-
+        // Call the function to fetch and display the limited nasi kotak data
+        fetchLimitedNasiKotak();
+    });
 </script>
 
 
