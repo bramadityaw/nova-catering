@@ -38,7 +38,7 @@
         </ul>
 
         <section class="article-container">
-<!-- ISi stabel-->
+            <!-- ISi stabel-->
         </section>
     </main>
 </section>
@@ -179,15 +179,27 @@
             event.preventDefault();
             const judulIsiMenu = document.getElementById('judul_isimenu').value;
 
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             const accessToken = sessionStorage.getItem('access_token');
 
             try {
-                // Determine the API endpoint and HTTP method based on edit_id
+                // Tampilkan SweetAlert loading
+                Swal.fire({
+                    title: 'Memproses...',
+                    text: 'Silakan tunggu sebentar',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Tentukan endpoint API dan metode HTTP berdasarkan edit_id
                 const apiEndpoint = edit_id ? `/api/satuan/${edit_id}` : '/api/satuan';
                 const method = edit_id ? 'PUT' : 'POST';
 
-                // Define the request body based on the method
+                // Tentukan body permintaan berdasarkan metode
                 const requestBody = edit_id ? {
                     nama: judulIsiMenu
                 } : {
@@ -196,7 +208,7 @@
                     }]
                 };
 
-                // Send the request
+                // Kirim permintaan ke API
                 const response = await fetch(apiEndpoint, {
                     method: method,
                     headers: {
@@ -207,57 +219,94 @@
                     body: JSON.stringify(requestBody)
                 });
 
-                // Handle different status codes for the request
                 if (!response.ok) {
                     const responseBody = await response.json();
 
                     if (response.status === 409) {
-                        // Handle Conflict error (409), display the duplicate items message
-                        alert(responseBody.duplicate_items ?
-                            `Item sudah ada: ${responseBody.duplicate_items.join(', ')}` :
-                            'Semua item sudah ada di database.');
+                        // Tampilkan pesan item duplikat
+                        Swal.fire({
+                            title: 'Item Duplikat',
+                            text: responseBody.duplicate_items ?
+                                `Item sudah ada: ${responseBody.duplicate_items.join(', ')}` : 'Semua item sudah ada di database.',
+                            icon: 'error'
+                        });
                     } else if (response.status === 207) {
-                        // Handle Multi-Status (207), display saved and duplicate items
-                        alert(`Beberapa item berhasil disimpan: ${responseBody.saved_items.join(', ')}`);
-                        if (responseBody.duplicate_items.length > 0) {
-                            alert(`Item duplikat: ${responseBody.duplicate_items.join(', ')}`);
-                        }
+                        // Tampilkan item yang berhasil disimpan dan item duplikat
+                        const savedItems = responseBody.saved_items.join(', ');
+                        const duplicateItems = responseBody.duplicate_items.join(', ');
+
+                        Swal.fire({
+                            title: 'Sebagian Berhasil',
+                            html: `
+                        <p>Item berhasil disimpan: ${savedItems}</p>
+                        ${duplicateItems ? `<p>Item duplikat: ${duplicateItems}</p>` : ''}
+                    `,
+                            icon: 'info'
+                        });
                     } else {
-                        // Handle other error statuses
-                        alert('Gagal menambahkan item. Silakan coba lagi.');
+                        // Tampilkan kesalahan umum
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: 'Gagal menambahkan item. Silakan coba lagi.',
+                            icon: 'error'
+                        });
                     }
-                    return; // Exit function on error
+                    return; // Keluar dari fungsi jika terjadi kesalahan
                 }
 
-                // Success handling
-                fetchSatuanData(); // Refresh data after the operation
-                closeModal(); // Close the modal after submission
-                addItemForm.reset(); // Reset the form
+                // Operasi berhasil
+                fetchSatuanData(); // Refresh data
+                closeModal(); // Tutup modal
+                addItemForm.reset(); // Reset form
 
-                // Show alert based on whether it was an add or update
-                alert(edit_id ? 'Data berhasil diperbarui!' : 'Item berhasil ditambahkan!');
+                // Tampilkan SweetAlert sukses
+                Swal.fire({
+                    title: edit_id ? 'Berhasil Diperbarui' : 'Berhasil Ditambahkan',
+                    text: edit_id ? 'Data berhasil diperbarui!' : 'Item berhasil ditambahkan!',
+                    icon: 'success',
+                    timer: 2000, // Tampilkan selama 2 detik
+                    showConfirmButton: false
+                });
 
-                // Reset edit_id for future use
+                // Reset edit_id untuk operasi berikutnya
                 edit_id = null;
 
             } catch (error) {
                 console.error(`Error ${edit_id ? 'updating' : 'adding'} item:`, error);
-                alert(`Gagal ${edit_id ? 'memperbarui' : 'menambahkan'} item. Silakan coba lagi.`);
+                Swal.fire({
+                    title: 'Kesalahan',
+                    text: `Gagal ${edit_id ? 'memperbarui' : 'menambahkan'} item. Silakan coba lagi.`,
+                    icon: 'error'
+                });
             }
         });
 
 
 
+
         // Function to delete an item
         async function deleteItem(id) {
-            if (!confirm('Apakah Anda yakin ingin menghapus item ini?')) {
-                return;
-            }
-
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             const accessToken = sessionStorage.getItem('access_token');
 
+            // SweetAlert untuk konfirmasi penghapusan
+            const confirmDelete = await Swal.fire({
+                title: 'Konfirmasi Penghapusan',
+                text: 'Apakah Anda yakin ingin menghapus item ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            });
+
+            if (!confirmDelete.isConfirmed) {
+                return; // Batalkan proses jika pengguna menekan tombol "Batal"
+            }
+
             try {
+                // Kirim permintaan DELETE ke API
                 const response = await fetch(deleteItemApiEndpoint.replace('{id}', id), {
                     method: 'DELETE',
                     headers: {
@@ -267,14 +316,32 @@
                     }
                 });
 
-                if (!response.ok) throw new Error(`Failed to delete item with ID ${id}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to delete item with ID ${id}`);
+                }
 
-                fetchSatuanData(); // Refresh data after deletion
+                // SweetAlert untuk notifikasi berhasil
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Item berhasil dihapus.',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                fetchSatuanData(); // Refresh data setelah penghapusan
             } catch (error) {
                 console.error("Error deleting item:", error);
-                alert("Gagal menghapus item. Silakan coba lagi.");
+
+                // SweetAlert untuk notifikasi error
+                Swal.fire({
+                    title: 'Gagal',
+                    text: 'Gagal menghapus item. Silakan coba lagi.',
+                    icon: 'error'
+                });
             }
         }
+
 
         // Make deleteItem globally accessible
         window.deleteItem = deleteItem;
