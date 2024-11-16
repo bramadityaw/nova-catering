@@ -3,11 +3,7 @@
         <div class="footer-top">
             <div class="footer-area text-center">
                 <div class="footer-logo">
-                    <a href="index.html"><img src="/images/logo2.png" alt="footer-logo"></a>
-                </div>
-                <div class="scocial-media">
-                    <a href="#" class="facebook"><i class="icofont-whatsapp"></i></a>
-                    <a href="#" class="twitter"><i class="icofont-instagram"></i></a>
+                    <a href="/"><img src="/images/logo2.png" alt="footer-logo"></a>
                 </div>
                 <div class="footer-menu">
                     <ul>
