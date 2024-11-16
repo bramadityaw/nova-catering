@@ -23,18 +23,6 @@
                 <p>Disediakan untuk acara besar anda, kami siap memasaknya untuk anda.</p>
             </div>
             <div class="menu-prasmanan">
-                <div class="menu-card">
-                    <a href="detail-nasikotak.html">
-                        <div class="menu-image">
-                            <img src="assets/images/paketA.png" alt="Prasmanan A">
-                        </div>
-                        <h3>Nasi Kotak A</h3>
-                        <p>Paket Sederhana</p>
-                        <p>Menu simpel dengan hidangan khas Nusantara seperti rendang, ayam semur manis, dan sup mutiar
-                        </p>
-                        <p class="price">Rp65.000</p>
-                    </a>
-                </div>
             </div>
         </div>
     </section>
