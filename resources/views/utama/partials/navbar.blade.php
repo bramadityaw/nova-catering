@@ -20,10 +20,10 @@
                     <li><a href="{{ url('ulasan') }}">Ulasan</a></li>
                     <li><a href="{{ url('kontak') }}">Kontak</a></li>
                     <li>
-                        <a href="#" target="_blank">
+                        <a href="https://wa.me/6285173079533" target="_blank">
                             <button
                                 style="background-color: #471471; color: white; padding: 10px; border: none; border-radius: 5px;">
-                                WhatsApp Us
+                                Hubungi Kami
                             </button>
                         </a>
                     </li>
